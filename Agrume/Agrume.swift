@@ -24,8 +24,7 @@ public final class Agrume: UIViewController {
   private static let maxScalingForExpandingOffscreen: CGFloat = 1.25
   private static let reuseIdentifier = "reuseIdentifier"
 
-  private var images: [UIImage]!
-  private var imageUrls: [URL]!
+  private var images: [AgrumeImage]!
   private var startIndex: Int?
   private let backgroundBlurStyle: UIBlurEffectStyle?
   private let backgroundColor: UIColor?
@@ -118,13 +117,14 @@ public final class Agrume: UIViewController {
       self.backgroundColor = nil
     }
 
-    self.images = images
     if let image = image {
-      self.images = [image]
-    }
-    self.imageUrls = imageUrls
-    if let imageURL = imageUrl {
-      self.imageUrls = [imageURL]
+      self.images = [AgrumeImage(image: image)]
+    } else if let imageURL = imageUrl {
+      self.images = [AgrumeImage(url: imageURL)]
+    } else if let images = images {
+      self.images = images.map { AgrumeImage(image: $0) }
+    } else if let imageUrls = imageUrls {
+      self.images = imageUrls.map { AgrumeImage(url: $0) }
     }
 
 		self.dataSource = dataSource
@@ -433,29 +433,27 @@ extension Agrume: UICollectionViewDataSource {
     if let dataSource = dataSource {
       return dataSource.numberOfImages
     }
-    if let images = images {
-      return !images.isEmpty ? images.count : imageUrls.count
-    }
-    return imageUrls.count
+    return images.count
   }
 
   public func collectionView(_ collectionView: UICollectionView,
                              cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Agrume.reuseIdentifier,
                                                   for: indexPath) as! AgrumeCell
-    if let images = images {
-      cell.image = images[indexPath.row]
-		} else if let dataSource = dataSource {
-			spinner.alpha = 1
-			let index = indexPath.row
-			
+    if let dataSource = dataSource {
+      spinner.alpha = 1
+      let index = indexPath.row
+
       dataSource.image(forIndex: index) { [weak self] image in
         DispatchQueue.main.async {
           cell.image = image
           self?.spinner.alpha = 0
         }
       }
-		}
+    } else {
+      cell.image = images[indexPath.item].image
+    }
+
     // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images
     collectionView.panGestureRecognizer.require(toFail: cell.swipeGesture)
     cell.delegate = self
@@ -466,41 +464,38 @@ extension Agrume: UICollectionViewDataSource {
 
 extension Agrume: UICollectionViewDelegate {
 
-  public func collectionView(_ collectionView: UICollectionView,
-                             willDisplay cell: UICollectionViewCell,
+  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                              forItemAt indexPath: IndexPath) {
     didScroll?(indexPath.row)
-    
-    if let imageUrls = imageUrls {
+
+    if let dataSource = dataSource {
+      let collectionViewCount = collectionView.numberOfItems(inSection: 0)
+      let dataSourceCount = dataSource.numberOfImages
+
+      if isDataSourceCountUnchanged(dataSourceCount: dataSourceCount, collectionViewCount: collectionViewCount) {
+        return
+      }
+
+      if isIndexPathOutOfBounds(indexPath, count: dataSourceCount) {
+        showImage(atIndex: dataSourceCount - 1)
+      }
+      reload()
+    } else if let url = images[indexPath.item].url {
       let completion: DownloadCompletion = { [weak self] image in
         (cell as! AgrumeCell).image = image
         self?.spinner.alpha = 0
       }
-      
       if let download = download {
-        download(imageUrls[indexPath.row], completion)
+        download(url, completion)
       } else if let download = AgrumeServiceLocator.shared.downloadHandler {
         spinner.alpha = 1
-        download(imageUrls[indexPath.row], completion)
+        download(url, completion)
       } else {
         spinner.alpha = 1
-        downloadImage(imageUrls[indexPath.row], completion: completion)
+        downloadImage(url, completion: completion)
       }
     }
-		
-		if let dataSource = dataSource {
-      let collectionViewCount = collectionView.numberOfItems(inSection: 0)
-			let dataSourceCount = dataSource.numberOfImages
-			
-			if isDataSourceCountUnchanged(dataSourceCount: dataSourceCount, collectionViewCount: collectionViewCount) {
-        return
-      }
-			
-			if isIndexPathOutOfBounds(indexPath, count: dataSourceCount) {
-				showImage(atIndex: dataSourceCount - 1)
-			}
-      reload()
-		}
+
   }
   
   private func downloadImage(_ url: URL, completion: @escaping DownloadCompletion) {
@@ -570,13 +565,10 @@ extension Agrume: AgrumeCellDelegate {
   }
   
   func isSingleImageMode() -> Bool {
-    if let images = images, !images.isEmpty {
-      return images.count == 1
-    }
     if let dataSource = dataSource {
       return dataSource.numberOfImages == 1
     }
-    return imageUrls.count == 1
+    return images.count == 1
   }
   
 }
