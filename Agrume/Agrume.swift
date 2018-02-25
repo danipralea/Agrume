@@ -19,17 +19,17 @@ public protocol AgrumeDataSource {
 
 public final class Agrume: UIViewController {
 
-  fileprivate static let transitionAnimationDuration: TimeInterval = 0.3
-  fileprivate static let initialScalingToExpandFrom: CGFloat = 0.6
-  fileprivate static let maxScalingForExpandingOffscreen: CGFloat = 1.25
-  fileprivate static let reuseIdentifier = "reuseIdentifier"
+  private static let transitionAnimationDuration: TimeInterval = 0.3
+  private static let initialScalingToExpandFrom: CGFloat = 0.6
+  private static let maxScalingForExpandingOffscreen: CGFloat = 1.25
+  private static let reuseIdentifier = "reuseIdentifier"
 
-  fileprivate var images: [UIImage]!
-  fileprivate var imageUrls: [URL]!
+  private var images: [UIImage]!
+  private var imageUrls: [URL]!
   private var startIndex: Int?
   private let backgroundBlurStyle: UIBlurEffectStyle?
   private let backgroundColor: UIColor?
-  fileprivate let dataSource: AgrumeDataSource?
+  private let dataSource: AgrumeDataSource?
 
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
   
@@ -164,8 +164,8 @@ public final class Agrume: UIViewController {
 
   private var backgroundSnapshot: UIImage!
   private var backgroundImageView: UIImageView!
-  fileprivate var _blurContainerView: UIView?
-  fileprivate var blurContainerView: UIView {
+  private var _blurContainerView: UIView?
+  private var blurContainerView: UIView {
     if _blurContainerView == nil {
       let view = UIView(frame: self.view.frame)
       view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -174,7 +174,7 @@ public final class Agrume: UIViewController {
     }
     return _blurContainerView!
   }
-  fileprivate var _blurView: UIVisualEffectView?
+  private var _blurView: UIVisualEffectView?
   private var blurView: UIVisualEffectView {
     if _blurView == nil {
       let blurView = UIVisualEffectView(effect: UIBlurEffect(style: self.backgroundBlurStyle!))
@@ -184,8 +184,8 @@ public final class Agrume: UIViewController {
     }
     return _blurView!
   }
-  fileprivate var _collectionView: UICollectionView?
-  fileprivate var collectionView: UICollectionView {
+  private var _collectionView: UICollectionView?
+  private var collectionView: UICollectionView {
     if _collectionView == nil {
       let layout = UICollectionViewFlowLayout()
       layout.minimumInteritemSpacing = 0
@@ -205,8 +205,8 @@ public final class Agrume: UIViewController {
     }
     return _collectionView!
   }
-  fileprivate var _spinner: UIActivityIndicatorView?
-  fileprivate var spinner: UIActivityIndicatorView {
+  private var _spinner: UIActivityIndicatorView?
+  private var spinner: UIActivityIndicatorView {
     if _spinner == nil {
       let activityIndicatorStyle: UIActivityIndicatorViewStyle = self.backgroundBlurStyle == .dark ? .whiteLarge : .gray
       let spinner = UIActivityIndicatorView(activityIndicatorStyle: activityIndicatorStyle)
@@ -217,7 +217,7 @@ public final class Agrume: UIViewController {
     }
     return _spinner!
   }
-  fileprivate var downloadTask: URLSessionDataTask?
+  private var downloadTask: URLSessionDataTask?
 
   override public func viewDidLoad() {
     super.viewDidLoad()
@@ -234,11 +234,11 @@ public final class Agrume: UIViewController {
     lastUsedOrientation = currentDeviceOrientation()
   }
 
-  fileprivate func deviceOrientationFromStatusBarOrientation() -> UIDeviceOrientation {
+  private func deviceOrientationFromStatusBarOrientation() -> UIDeviceOrientation {
     return UIDeviceOrientation(rawValue: UIApplication.shared.statusBarOrientation.rawValue)!
   }
 
-  fileprivate var initialOrientation: UIDeviceOrientation!
+  private var initialOrientation: UIDeviceOrientation!
 
   public func showFrom(_ viewController: UIViewController, backgroundSnapshotVC: UIViewController? = nil) {
     backgroundSnapshot = (backgroundSnapshotVC ?? viewControllerForSnapshot(fromViewController: viewController))?.view.snapshot()
@@ -284,7 +284,7 @@ public final class Agrume: UIViewController {
     }
   }
 
-  fileprivate func viewControllerForSnapshot(fromViewController viewController: UIViewController) -> UIViewController? {
+  private func viewControllerForSnapshot(fromViewController viewController: UIViewController) -> UIViewController? {
     var presentingVC = viewController.view.window?.rootViewController
     while presentingVC?.presentedViewController != nil {
       presentingVC = presentingVC?.presentedViewController

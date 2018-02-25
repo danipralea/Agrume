@@ -49,7 +49,7 @@ final class AgrumeCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
 
-    backgroundColor = UIColor.clear
+    backgroundColor = .clear
     contentView.addSubview(scrollView)
     scrollView.addSubview(imageView)
     setupGestureRecognizers()
@@ -140,7 +140,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
   }
 
   @objc
-     func doubleTap(_ sender: UITapGestureRecognizer) {
+  func doubleTap(_ sender: UITapGestureRecognizer) {
     let point = scrollView.convert(sender.location(in: sender.view), from: sender.view)
     
     if notZoomed() {
