@@ -42,9 +42,9 @@ final class MultipleURLsCollectionViewController: UICollectionViewController {
   
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let urls = images.map { $0.url }
-//    let agrume = Agrume(imageUrls: urls, startIndex: indexPath.row, backgroundBlurStyle: .extraLight)
+//    let agrume = Agrume(imageUrls: urls, startIndex: indexPath.item, backgroundBlurStyle: .extraLight)
 //    agrume.didScroll = { [unowned self] index in
-//      self.collectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: [], animated: false)
+//      self.collectionView?.scrollToItem(at: IndexPath(item: index, section: 0), at: [], animated: false)
 //    }
 //    agrume.showFrom(self)
   }

@@ -4,6 +4,14 @@
 
 import UIKit
 
+/// The background configuration
+public enum BackgroundConfig {
+  /// Overlay with a UIBlurEffectStyle
+  case blurred(UIBlurEffectStyle)
+  /// Overlay with a color
+  case colored(UIColor)
+}
+
 public protocol AgrumeDataSource: class {
 	
   /// The number of images contained in the data source
@@ -53,20 +61,21 @@ public final class Agrume: UIViewController {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
   }
 
-  public convenience init(image: UIImage) {
-    self.init(image: image, url: nil)
+  public convenience init(image: UIImage, backgroundConfig: BackgroundConfig = .colored(.black)) {
+    self.init(image: image, url: nil, backgroundConfig: backgroundConfig)
   }
 
-  public convenience init(url: URL) {
-    self.init(image: nil, url: url)
+  public convenience init(url: URL, backgroundConfig: BackgroundConfig = .colored(.black)) {
+    self.init(image: nil, url: url, backgroundConfig: backgroundConfig)
   }
 
-  public convenience init(images: [UIImage], startIndex: Int = 0) {
-    self.init(image: nil, images: images, startIndex: startIndex)
+  public convenience init(images: [UIImage], startIndex: Int = 0, backgroundConfig: BackgroundConfig = .colored(.black)) {
+    self.init(image: nil, images: images, startIndex: startIndex, backgroundConfig: backgroundConfig)
   }
 
   private init(image: UIImage? = nil, url: URL? = nil, images: [UIImage]? = nil, urls: [URL]? = nil,
-               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, dataSource: AgrumeDataSource? = nil) {
+               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, backgroundConfig: BackgroundConfig,
+               dataSource: AgrumeDataSource? = nil) {
     super.init(nibName: nil, bundle: nil)
 
     switch (image, url, images, urls, agrumeImages) {
