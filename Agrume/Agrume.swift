@@ -60,6 +60,10 @@ public final class Agrume: UIViewController {
     self.init(image: nil, url: url)
   }
 
+  public convenience init(images: [UIImage]) {
+    self.init(image: nil, images: images)
+  }
+
   private init(image: UIImage? = nil, url: URL? = nil, images: [UIImage]? = nil, urls: [URL]? = nil,
                agrumeImages: [AgrumeImage]? = nil, dataSource: AgrumeDataSource? = nil) {
     super.init(nibName: nil, bundle: nil)
