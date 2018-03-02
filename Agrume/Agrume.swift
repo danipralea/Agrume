@@ -26,6 +26,7 @@ public protocol AgrumeDataSource: class {
 public final class Agrume: UIViewController {
 
   private var images: [AgrumeImage]!
+  private var startIndex: Int!
   private var isStatusBarHidden: Bool!
 
   private weak var dataSource: AgrumeDataSource?
@@ -60,12 +61,12 @@ public final class Agrume: UIViewController {
     self.init(image: nil, url: url)
   }
 
-  public convenience init(images: [UIImage]) {
-    self.init(image: nil, images: images)
+  public convenience init(images: [UIImage], startIndex: Int = 0) {
+    self.init(image: nil, images: images, startIndex: startIndex)
   }
 
   private init(image: UIImage? = nil, url: URL? = nil, images: [UIImage]? = nil, urls: [URL]? = nil,
-               agrumeImages: [AgrumeImage]? = nil, dataSource: AgrumeDataSource? = nil) {
+               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, dataSource: AgrumeDataSource? = nil) {
     super.init(nibName: nil, bundle: nil)
 
     switch (image, url, images, urls, agrumeImages) {
@@ -83,6 +84,7 @@ public final class Agrume: UIViewController {
       fatalError("Impossible initialiser call")
     }
 
+    self.startIndex = startIndex
     self.dataSource = dataSource ?? self
   }
 
@@ -98,7 +100,7 @@ public final class Agrume: UIViewController {
     pageViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     pageViewController.didMove(toParentViewController: self)
 
-    guard let image = dataSource?.image(at: 0) else { return }
+    guard let image = dataSource?.image(at: startIndex) else { return }
     let controller = newImageViewController(for: image)
     pageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
   }

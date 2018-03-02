@@ -36,7 +36,7 @@ final class MultipleImagesCollectionViewController: UICollectionViewController {
   // MARK: UICollectionViewDelegate
 
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let agrume = Agrume(images: images)
+    let agrume = Agrume(images: images, startIndex: indexPath.item)
 //    agrume.didScroll = { [unowned self] index in
 //      self.collectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: [], animated: false)
 //    }
