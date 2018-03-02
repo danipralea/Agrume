@@ -33,11 +33,16 @@ public protocol AgrumeDataSource: class {
 
 public final class Agrume: UIViewController {
 
+  private let interactiveAnimator = TransitionAnimator()
+  private let transitionAnimator = TransitionAnimator()
+
   private var images: [AgrumeImage]!
   private var startIndex: Int!
-  private var isStatusBarHidden: Bool!
 
   private weak var dataSource: AgrumeDataSource?
+
+  private var isStatusBarHidden = false
+  private var isInteractiveDismissal = false
 
   private lazy var pageViewController: UIPageViewController = {
     let controller = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -95,6 +100,10 @@ public final class Agrume: UIViewController {
 
     self.startIndex = startIndex
     self.dataSource = dataSource ?? self
+
+    modalPresentationStyle = .custom
+    transitioningDelegate = self
+    modalPresentationCapturesStatusBarAppearance = true
   }
 
   required public init?(coder aDecoder: NSCoder) {
@@ -167,6 +176,33 @@ extension Agrume: UIPageViewControllerDelegate {
     guard completed else { return }
 
   }
+
+}
+
+extension Agrume: UIViewControllerTransitioningDelegate {
+
+  public func animationController(forPresented presented: UIViewController, presenting: UIViewController,
+                                  source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    transitionAnimator.isDismissing = false
+    return transitionAnimator
+  }
+
+  public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    transitionAnimator.isDismissing = true
+    return transitionAnimator
+  }
+
+  // swiftlint:disable line_length
+  public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    if isInteractiveDismissal {
+      transitionAnimator.finalViewForAnimation = transitionAnimator.finalView?.snapshotView()
+      interactiveAnimator.animator = transitionAnimator
+      interactiveAnimator.isAnimatingUsingAnimator = transitionAnimator.finalView != nil
+      interactiveAnimator.viewToHideOnInteractiveTransition = transitionAnimator.startView != nil ? transitionAnimator.finalView : nil
+    }
+    return nil
+  }
+  // swiftlint: enable line_length
 
 }
 
