@@ -11,12 +11,12 @@ final class SingleImageBackgroundColorViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    agrume = Agrume(image: #imageLiteral(resourceName: "MapleBacon"), backgroundColor: .black)
-    agrume.hideStatusBar = true
+//    agrume = Agrume(image: #imageLiteral(resourceName: "MapleBacon"), backgroundColor: .black)
+//    agrume.hideStatusBar = true
   }
 
   @IBAction private func openImage(_ sender: Any) {
-    agrume.showFrom(self)
+//    agrume.showFrom(self)
   }
   
 }

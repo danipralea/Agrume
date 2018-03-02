@@ -15,7 +15,7 @@ final class SingleImageViewController: UIViewController {
   }
 
   @IBAction func openImage(_ sender: Any) {
-    agrume.showFrom(self)
+    present(agrume, animated: true)
   }
 
 }

@@ -4,7 +4,7 @@
 
 import UIKit
 
-public struct AgrumeImage {
+public struct AgrumeImage: Equatable {
 
   public let image: UIImage?
   public let url: URL?
@@ -20,6 +20,10 @@ public struct AgrumeImage {
 
   public init(url: URL) {
     self.init(image: nil, url: url)
+  }
+
+  public static func == (lhs: AgrumeImage, rhs: AgrumeImage) -> Bool {
+    return lhs.image == rhs.image && lhs.url == rhs.url
   }
 
 }
