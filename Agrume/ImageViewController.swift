@@ -108,9 +108,9 @@ final class ImageViewController: UIViewController {
 
   @objc
   private func pan(_ gesture: UIPanGestureRecognizer) {
-    let translation = gesture.translation(in: gesture.view)
-    let location = gesture.location(in: gesture.view)
-    let velocity = gesture.velocity(in: gesture.view)
+    let translation = gesture.translation(in: scrollView.imageView)
+    let location = gesture.location(in: scrollView.imageView)
+    let velocity = gesture.velocity(in: scrollView.imageView)
     let vectorDistance = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
 
     switch gesture.state {
@@ -206,6 +206,13 @@ final class ImageViewController: UIViewController {
                     self.scrollView.imageView.transform = .identity
 
                     guard !self.scrollView.isDragging && !self.scrollView.isDecelerating else { return }
+
+                    let zoomScale = self.scale()
+                    let size = self.scrollView.bounds.size
+                    let width = size.width / zoomScale
+                    let height = size.height / zoomScale
+                    let zoomRect = CGRect(x: 0, y: 0, width: width, height: height)
+                    self.scrollView.zoom(to: zoomRect, animated: false)
 
                     self.scrollView.imageView.center = CGPoint(x: self.scrollView.contentSize.width / 2,
                                                                y: self.scrollView.contentSize.height / 2)
