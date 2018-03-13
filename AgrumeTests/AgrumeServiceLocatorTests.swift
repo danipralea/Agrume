@@ -3,7 +3,7 @@
 //
 
 import XCTest
-@testable import Agrume
+import Agrume
 
 class AgrumeServiceLocatorTests: XCTestCase {
 
@@ -12,8 +12,8 @@ class AgrumeServiceLocatorTests: XCTestCase {
   
   override func setUp() {
     super.setUp()
-    
-    agrume = Agrume(imageUrl: URL(string: "https://dl.dropboxusercontent.com/u/512759/MapleBacon.png")!)
+
+    agrume = Agrume(url: URL(string: "https://dl.dropboxusercontent.com/u/512759/MapleBacon.png")!)
   }
   
   override func tearDown() {
@@ -29,7 +29,7 @@ class AgrumeServiceLocatorTests: XCTestCase {
       callCount += 1
     }
     
-    agrume.showFrom(mockViewController)
+    mockViewController.show(agrume, sender: nil)
     
     XCTAssertEqual(1, callCount)
   }
@@ -41,7 +41,7 @@ class AgrumeServiceLocatorTests: XCTestCase {
     }
     
     AgrumeServiceLocator.shared.removeDownloadHandler()
-    agrume.showFrom(mockViewController)
+    mockViewController.show(agrume, sender: nil)
     
     XCTAssertEqual(0, callCount)
   }
@@ -57,7 +57,7 @@ class AgrumeServiceLocatorTests: XCTestCase {
       closureCallCount += 1
     }
     
-    agrume.showFrom(mockViewController)
+    mockViewController.show(agrume, sender: nil)
     
     XCTAssertEqual(0, callCount)
     XCTAssertEqual(1, closureCallCount)

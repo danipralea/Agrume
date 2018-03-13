@@ -33,6 +33,8 @@ public protocol AgrumeDataSource: class {
 
 public final class Agrume: UIViewController {
 
+  public typealias DownloadCompletion = (_ image: UIImage?) -> Void
+
   private let interactiveAnimator = TransitionAnimator()
   private let transitionAnimator = TransitionAnimator()
 
@@ -56,6 +58,10 @@ public final class Agrume: UIViewController {
   private var singleTapGesture: UITapGestureRecognizer = {
     return UITapGestureRecognizer(target: self, action: #selector(singleTap))
   }()
+
+  /// An optional download handler. Passed the URL that is supposed to be loaded. Call the completion with the image
+  /// when the download is done.
+  public var download: ((_ url: URL, _ completion: @escaping DownloadCompletion) -> Void)?
 
   @objc
   private func singleTap(_ gesture: UITapGestureRecognizer) {
@@ -245,7 +251,7 @@ extension Agrume: ImageViewControllerDelegate {
 //  private let backgroundColor: UIColor?
 //  private let dataSource: AgrumeDataSource?
 //
-//  public typealias DownloadCompletion = (_ image: UIImage?) -> Void
+
 //
 //  /// Optional closure to call whenever Agrume is dismissed.
 //  public var didDismiss: (() -> Void)?
