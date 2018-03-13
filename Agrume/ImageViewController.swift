@@ -4,11 +4,19 @@
 
 import UIKit
 
+protocol ImageViewControllerDelegate: class {
+
+  func dismiss()
+
+}
+
 final class ImageViewController: UIViewController {
 
   private static let minFlickDismissVelocity: CGFloat = 800
 
   let agrumeImage: AgrumeImage
+
+  weak var delegate: ImageViewControllerDelegate?
 
   private var isDraggingImage = false
   private var imageDragStartLocation: CGPoint!
@@ -16,7 +24,7 @@ final class ImageViewController: UIViewController {
   private var imageDragOffsetFromImageCenter: UIOffset!
   private var attachmentBehavior: UIAttachmentBehavior?
 
-  private lazy var scrollView: ScrollView = {
+  lazy var scrollView: ScrollView = {
     let scrollView = ScrollView()
     scrollView.delegate = self
     scrollView.frame = view.bounds
@@ -179,7 +187,7 @@ final class ImageViewController: UIViewController {
   }
 
   private func dismiss() {
-
+    delegate?.dismiss()
   }
 
   private func snapBack() {

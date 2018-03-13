@@ -155,6 +155,7 @@ extension Agrume: UIPageViewControllerDataSource {
 
   private func newImageViewController(for image: AgrumeImage) -> ImageViewController {
     let controller = ImageViewController(image: image)
+    controller.delegate = self
     singleTapGesture.require(toFail: controller.doubleTapGesture)
     return controller
   }
@@ -175,6 +176,14 @@ extension Agrume: UIPageViewControllerDelegate {
                                  previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
     guard completed else { return }
 
+  }
+
+  private var currentImageViewController: ImageViewController? {
+    return pageViewController.viewControllers?.first as? ImageViewController
+  }
+
+  private var currentImage: AgrumeImage? {
+    return currentImageViewController?.agrumeImage
   }
 
 }
@@ -203,6 +212,25 @@ extension Agrume: UIViewControllerTransitioningDelegate {
     return nil
   }
   // swiftlint: enable line_length
+
+}
+
+extension Agrume: ImageViewControllerDelegate {
+
+  func dismiss() {
+    guard presentedViewController == nil else {
+      super.dismiss(animated: true, completion: nil)
+      return
+    }
+    var startView: UIView?
+    if let _ = currentImageViewController?.scrollView.imageView.image {
+      startView = currentImageViewController?.scrollView.imageView
+    }
+    transitionAnimator.startView = startView
+//    transitionAnimator.finalView = nil
+
+    super.dismiss(animated: true, completion: nil)
+  }
 
 }
 
