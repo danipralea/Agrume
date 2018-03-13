@@ -37,9 +37,9 @@ public final class Agrume: UIViewController {
 
   private let interactiveAnimator = TransitionAnimator()
   private let transitionAnimator = TransitionAnimator()
-
-  private var images: [AgrumeImage]!
-  private var startIndex: Int!
+  private let backgroundConfig: BackgroundConfig
+  private let images: [AgrumeImage]
+  private let startIndex: Int
 
   private weak var dataSource: AgrumeDataSource?
 
@@ -85,9 +85,9 @@ public final class Agrume: UIViewController {
   }
 
   private init(image: UIImage? = nil, url: URL? = nil, images: [UIImage]? = nil, urls: [URL]? = nil,
-               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, backgroundConfig: BackgroundConfig,
+               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, backgroundConfig: BackgroundConfig = .colored(.black),
                dataSource: AgrumeDataSource? = nil) {
-    super.init(nibName: nil, bundle: nil)
+    self.backgroundConfig = backgroundConfig
 
     switch (image, url, images, urls, agrumeImages) {
     case (let image?, nil, nil, nil, nil):
@@ -105,6 +105,9 @@ public final class Agrume: UIViewController {
     }
 
     self.startIndex = startIndex
+
+    super.init(nibName: nil, bundle: nil)
+
     self.dataSource = dataSource ?? self
 
     modalPresentationStyle = .custom
@@ -119,6 +122,9 @@ public final class Agrume: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
 
+    if case .colored(let color) = backgroundConfig {
+      view.backgroundColor = color
+    }
     addChildViewController(pageViewController)
     view.addSubview(pageViewController.view)
     pageViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
