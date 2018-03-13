@@ -11,7 +11,10 @@ final class SingleImageViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    agrume = Agrume(image: #imageLiteral(resourceName: "MapleBacon"))
+    
+    if #available(iOS 10.0, *) {
+      agrume = Agrume(image: #imageLiteral(resourceName: "MapleBacon"), backgroundConfig: .blurred(.regular))
+    }
   }
 
   @IBAction func openImage(_ sender: Any) {

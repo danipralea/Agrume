@@ -6,10 +6,10 @@ import UIKit
 
 /// The background configuration
 public enum BackgroundConfig {
-  /// Overlay with a UIBlurEffectStyle
-  case blurred(UIBlurEffectStyle)
   /// Overlay with a color
   case colored(UIColor)
+  /// Overlay with a UIBlurEffectStyle
+  case blurred(UIBlurEffectStyle)
 }
 
 public protocol AgrumeDataSource: class {
@@ -54,6 +54,18 @@ public final class Agrume: UIViewController {
     controller.dataSource = self
     return controller
   }()
+
+  private var _blurView: UIVisualEffectView?
+  private var blurView: UIVisualEffectView {
+    guard case .blurred(let style) = backgroundConfig, _blurView == nil else { return _blurView! }
+
+    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: style))
+    blurView.frame = view.frame
+    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    _blurView = blurView
+
+    return blurView
+  }
 
   private var singleTapGesture: UITapGestureRecognizer = {
     return UITapGestureRecognizer(target: self, action: #selector(singleTap))
@@ -122,9 +134,13 @@ public final class Agrume: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
 
-    if case .colored(let color) = backgroundConfig {
+    switch backgroundConfig {
+    case .colored(let color):
       view.backgroundColor = color
+    case .blurred(_):
+      view.addSubview(blurView)
     }
+
     addChildViewController(pageViewController)
     view.addSubview(pageViewController.view)
     pageViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
