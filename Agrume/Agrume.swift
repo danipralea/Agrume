@@ -35,7 +35,6 @@ public final class Agrume: UIViewController {
 
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
 
-  private let interactiveAnimator = TransitionAnimator()
   private let transitionAnimator = TransitionAnimator()
   private let backgroundConfig: BackgroundConfig
   private let images: [AgrumeImage]
@@ -44,7 +43,6 @@ public final class Agrume: UIViewController {
   private weak var dataSource: AgrumeDataSource?
 
   private var isStatusBarHidden = false
-  private var isInteractiveDismissal = false
 
   private lazy var pageViewController: UIPageViewController = {
     let controller = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -228,18 +226,6 @@ extension Agrume: UIViewControllerTransitioningDelegate {
     transitionAnimator.isDismissing = true
     return transitionAnimator
   }
-
-  // swiftlint:disable line_length
-  public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-    if isInteractiveDismissal {
-      transitionAnimator.finalViewForAnimation = transitionAnimator.finalView?.snapshotView()
-      interactiveAnimator.animator = transitionAnimator
-      interactiveAnimator.isAnimatingUsingAnimator = transitionAnimator.finalView != nil
-      interactiveAnimator.viewToHideOnInteractiveTransition = transitionAnimator.startView != nil ? transitionAnimator.finalView : nil
-    }
-    return nil
-  }
-  // swiftlint: enable line_length
 
 }
 

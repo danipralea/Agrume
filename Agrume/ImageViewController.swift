@@ -92,6 +92,11 @@ final class ImageViewController: UIViewController {
     }
   }
 
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    scrollView.frame = view.bounds
+  }
+
   @objc
   private func doubleTap(_ gesture: UITapGestureRecognizer) {
     let zoomScale = scale()

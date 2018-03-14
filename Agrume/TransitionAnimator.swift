@@ -11,17 +11,10 @@ final class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning 
   var finalView: UIView?
   var startViewForAnimation: UIView?
   var finalViewForAnimation: UIView?
-  var viewToHideOnInteractiveTransition: UIView?
 
   var isDismissing = false
-  var isAnimatingUsingAnimator = false
 
   private var transitionContext: UIViewControllerContextTransitioning?
-
-  func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
-    viewToHideOnInteractiveTransition?.alpha = 0
-    self.transitionContext = transitionContext
-  }
 
   func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
     return 0.5
