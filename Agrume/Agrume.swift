@@ -137,7 +137,7 @@ public final class Agrume: UIViewController {
     switch backgroundConfig {
     case .colored(let color):
       view.backgroundColor = color
-    case .blurred(_):
+    case .blurred:
       view.addSubview(blurView)
     }
 

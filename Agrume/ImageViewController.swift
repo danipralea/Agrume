@@ -23,6 +23,7 @@ final class ImageViewController: UIViewController {
   private var imageDragOffsetFromActualTranslation: UIOffset!
   private var imageDragOffsetFromImageCenter: UIOffset!
   private var attachmentBehavior: UIAttachmentBehavior?
+  private var downloadTask: URLSessionDataTask?
 
   lazy var scrollView: ScrollView = {
     let scrollView = ScrollView()
@@ -59,6 +60,10 @@ final class ImageViewController: UIViewController {
     return gesture
   }()
 
+  deinit {
+    downloadTask?.cancel()
+  }
+
   init(image: AgrumeImage) {
     self.agrumeImage = image
     super.init(nibName: nil, bundle: nil)
@@ -80,7 +85,10 @@ final class ImageViewController: UIViewController {
       scrollView.image = image
       activityIndicator.stopAnimating()
     } else if let url = agrumeImage.url {
-      // Tell delegate to load the image
+      downloadTask = ImageDownloader.downloadImage(url) { [weak self] image in
+        self?.scrollView.image = image
+        self?.activityIndicator.stopAnimating()
+      }
     }
   }
 
