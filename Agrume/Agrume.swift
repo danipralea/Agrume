@@ -90,37 +90,36 @@ public final class Agrume: UIViewController {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
   }
 
+  public convenience init(image: AgrumeImage, background: BackgroundConfig = .colored(.black)) {
+    self.init(agrumeImages: [image], background: background)
+  }
+
   public convenience init(image: UIImage, background: BackgroundConfig = .colored(.black)) {
-    self.init(image: image, url: nil, background: background)
+    self.init(images: [image], urls: nil, background: background)
   }
 
   public convenience init(url: URL, background: BackgroundConfig = .colored(.black)) {
-    self.init(image: nil, url: url, background: background)
+    self.init(urls: [url], background: background)
   }
 
   public convenience init(images: [UIImage], startIndex: Int = 0, background: BackgroundConfig = .colored(.black)) {
-    self.init(image: nil, images: images, startIndex: startIndex, background: background)
+    self.init(images: images, urls: nil, startIndex: startIndex, background: background)
   }
 
   public convenience init(urls: [URL], startIndex: Int = 0, background: BackgroundConfig = .colored(.black)) {
-    self.init(image:nil, urls: urls, startIndex: startIndex, background: background)
+    self.init(images: nil, urls: urls, startIndex: startIndex, background: background)
   }
 
-  private init(image: UIImage? = nil, url: URL? = nil, images: [UIImage]? = nil, urls: [URL]? = nil,
-               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, background: BackgroundConfig = .colored(.black),
-               dataSource: AgrumeDataSource? = nil) {
+  private init(images: [UIImage]? = nil, urls: [URL]? = nil, agrumeImages: [AgrumeImage]? = nil,
+               startIndex: Int = 0, background: BackgroundConfig, dataSource: AgrumeDataSource? = nil) {
     self.backgroundConfig = background
 
-    switch (image, url, images, urls, agrumeImages) {
-    case (let image?, nil, nil, nil, nil):
-      self.images = [AgrumeImage(image: image)]
-    case (_, let url?, nil, nil, nil):
-      self.images = [AgrumeImage(url: url)]
-    case (_, _, let images?, nil, nil):
+    switch (images, urls, agrumeImages) {
+    case (let images?, nil, nil):
       self.images = images.map { AgrumeImage(image: $0) }
-    case (_, _, _, let urls?, nil):
+    case (_, let urls?, nil):
       self.images = urls.map { AgrumeImage(url: $0) }
-    case (_, _, _, _, let images?):
+    case (_, _, let images?):
       self.images = images
     default:
       fatalError("Impossible initialiser call")

@@ -8,22 +8,24 @@ public struct AgrumeImage: Equatable {
 
   public let image: UIImage?
   public let url: URL?
+  public let title: NSAttributedString?
 
-  private init(image: UIImage?, url: URL?) {
+  private init(image: UIImage?, url: URL?, title: NSAttributedString?) {
     self.image = image
     self.url = url
+    self.title = title
   }
 
-  public init(image: UIImage) {
-    self.init(image: image, url: nil)
+  public init(image: UIImage, title: NSAttributedString? = nil) {
+    self.init(image: image, url: nil, title: title)
   }
 
-  public init(url: URL) {
-    self.init(image: nil, url: url)
+  public init(url: URL, title: NSAttributedString? = nil) {
+    self.init(image: nil, url: url, title: title)
   }
 
   public static func == (lhs: AgrumeImage, rhs: AgrumeImage) -> Bool {
-    return lhs.image == rhs.image && lhs.url == rhs.url
+    return lhs.image == rhs.image && lhs.url == rhs.url && lhs.title == rhs.title
   }
 
 }
