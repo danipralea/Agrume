@@ -84,12 +84,23 @@ final class ImageViewController: UIViewController {
     if let image = agrumeImage.image {
       scrollView.image = image
       activityIndicator.stopAnimating()
-    } else if let url = agrumeImage.url {
+    }
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if let url = agrumeImage.url, scrollView.image == nil {
+      activityIndicator.startAnimating()
       downloadTask = ImageDownloader.downloadImage(url) { [weak self] image in
         self?.scrollView.image = image
         self?.activityIndicator.stopAnimating()
       }
     }
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    downloadTask?.cancel()
   }
 
   override func viewWillLayoutSubviews() {

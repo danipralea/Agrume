@@ -42,7 +42,15 @@ public final class Agrume: UIViewController {
 
   private weak var dataSource: AgrumeDataSource?
 
-  private var isStatusBarHidden = false
+  /// Hide status bar when presenting. Defaults to `false`
+  public var isStatusBarHidden = false
+
+  /// Status bar style when presenting
+  public var statusBarStyle: UIStatusBarStyle? {
+    didSet {
+      setNeedsStatusBarAppearanceUpdate()
+    }
+  }
 
   private lazy var pageViewController: UIPageViewController = {
     let controller = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -82,22 +90,26 @@ public final class Agrume: UIViewController {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
   }
 
-  public convenience init(image: UIImage, backgroundConfig: BackgroundConfig = .colored(.black)) {
-    self.init(image: image, url: nil, backgroundConfig: backgroundConfig)
+  public convenience init(image: UIImage, background: BackgroundConfig = .colored(.black)) {
+    self.init(image: image, url: nil, background: background)
   }
 
-  public convenience init(url: URL, backgroundConfig: BackgroundConfig = .colored(.black)) {
-    self.init(image: nil, url: url, backgroundConfig: backgroundConfig)
+  public convenience init(url: URL, background: BackgroundConfig = .colored(.black)) {
+    self.init(image: nil, url: url, background: background)
   }
 
-  public convenience init(images: [UIImage], startIndex: Int = 0, backgroundConfig: BackgroundConfig = .colored(.black)) {
-    self.init(image: nil, images: images, startIndex: startIndex, backgroundConfig: backgroundConfig)
+  public convenience init(images: [UIImage], startIndex: Int = 0, background: BackgroundConfig = .colored(.black)) {
+    self.init(image: nil, images: images, startIndex: startIndex, background: background)
+  }
+
+  public convenience init(urls: [URL], startIndex: Int = 0, background: BackgroundConfig = .colored(.black)) {
+    self.init(image:nil, urls: urls, startIndex: startIndex, background: background)
   }
 
   private init(image: UIImage? = nil, url: URL? = nil, images: [UIImage]? = nil, urls: [URL]? = nil,
-               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, backgroundConfig: BackgroundConfig = .colored(.black),
+               agrumeImages: [AgrumeImage]? = nil, startIndex: Int = 0, background: BackgroundConfig = .colored(.black),
                dataSource: AgrumeDataSource? = nil) {
-    self.backgroundConfig = backgroundConfig
+    self.backgroundConfig = background
 
     switch (image, url, images, urls, agrumeImages) {
     case (let image?, nil, nil, nil, nil):

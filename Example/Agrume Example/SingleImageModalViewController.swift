@@ -9,13 +9,12 @@ final class SingleImageModalViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     navigationController?.navigationBar.barTintColor = .red
   }
   
-  @IBAction func openImage(_ sender: Any) {
-//    let agrume = Agrume(image: #imageLiteral(resourceName: "MapleBacon"))
-//    agrume.showFrom(self)
+  @IBAction private func openImage(_ sender: Any) {
+    let agrume = Agrume(image: #imageLiteral(resourceName: "MapleBacon"), background: .blurred(.light))
+    present(agrume, animated: true)
   }
   
   @IBAction func close(_ sender: Any) {
