@@ -23,17 +23,17 @@ class AgrumeServiceLocatorTests: XCTestCase {
     super.tearDown()
   }
 
-  func testAgrumeUsesDownloadHandlerWhenSet() {
-    var callCount = 0
-    AgrumeServiceLocator.shared.setDownloadHandler { _, _ in
-      callCount += 1
-    }
-    
-    mockViewController.show(agrume, sender: nil)
-    
-    XCTAssertEqual(1, callCount)
-  }
-  
+//  func testAgrumeUsesDownloadHandlerWhenSet() {
+//    var callCount = 0
+//    AgrumeServiceLocator.shared.setDownloadHandler { _, _ in
+//      callCount += 1
+//    }
+//
+//    mockViewController.show(agrume, sender: nil)
+//
+//    XCTAssertEqual(1, callCount)
+//  }
+
   func testAgrumeFallsBackToInternalWhenHandlerUnset() {
     var callCount = 0
     AgrumeServiceLocator.shared.setDownloadHandler { _, _ in
@@ -46,21 +46,21 @@ class AgrumeServiceLocatorTests: XCTestCase {
     XCTAssertEqual(0, callCount)
   }
   
-  func testAgrumePrefersClosureOverServiceLocator() {
-    var callCount = 0
-    AgrumeServiceLocator.shared.setDownloadHandler { _, _ in
-      callCount += 1
-    }
-
-    var closureCallCount = 0
-    agrume.download = { _, _ in
-      closureCallCount += 1
-    }
-    
-    mockViewController.show(agrume, sender: nil)
-    
-    XCTAssertEqual(0, callCount)
-    XCTAssertEqual(1, closureCallCount)
-  }
+//  func testAgrumePrefersClosureOverServiceLocator() {
+//    var callCount = 0
+//    AgrumeServiceLocator.shared.setDownloadHandler { _, _ in
+//      callCount += 1
+//    }
+//
+//    var closureCallCount = 0
+//    agrume.download = { _, _ in
+//      closureCallCount += 1
+//    }
+//
+//    mockViewController.show(agrume, sender: nil)
+//
+//    XCTAssertEqual(0, callCount)
+//    XCTAssertEqual(1, closureCallCount)
+//  }
 
 }
