@@ -4,23 +4,37 @@
 
 import UIKit
 
-public final class OverlayView: UIView {
+protocol OverlayViewDelegate: class {
+  func didClose(overlayView view: OverlayView)
+}
+
+final class OverlayView: UIView {
 
   private lazy var navigationBar: UINavigationBar = {
     let navigationbar = UINavigationBar()
+    navigationbar.usesAutolayout(true)
     navigationbar.isTranslucent = true
     navigationbar.shadowImage = UIImage()
-    navigationItem = UINavigationItem(title: "")
+    navigationbar.setBackgroundImage(UIImage(), for: .default)
     navigationbar.items = [navigationItem]
     return navigationbar
   }()
-
-  private var navigationItem: UINavigationItem!
-  private(set) lazy var descriptionLabel: UILabel = {
+  
+  private lazy var navigationItem: UINavigationItem = {
+    return UINavigationItem(title: "")
+  }()
+  
+  private lazy var descriptionLabel: UILabel = {
     let label = UILabel()
     label.usesAutolayout(true)
     label.numberOfLines = 0
     return label
+  }()
+  
+  private lazy var formatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .none
+    return formatter
   }()
 
   private var leftBarButtonItem: UIBarButtonItem! {
@@ -28,11 +42,17 @@ public final class OverlayView: UIView {
       navigationItem.leftBarButtonItem = leftBarButtonItem
     }
   }
+  
+  weak var delegate: OverlayViewDelegate?
 
-  public override init(frame: CGRect) {
+  override init(frame: CGRect) {
     super.init(frame: frame)
     setupNavigationBar()
     setupDescription()
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
   private func setupNavigationBar() {
@@ -43,25 +63,40 @@ public final class OverlayView: UIView {
       navigationBar.centerXAnchor.constraint(equalTo: centerXAnchor)
     ])
 
-    leftBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(close))
+    leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "Close"), style: .plain, target: self,
+                                        action: #selector(close))
+  }
+  
+  @objc
+  private func close() {
+    delegate?.didClose(overlayView: self)
   }
   
   private func setupDescription() {
     addSubview(descriptionLabel)
     NSLayoutConstraint.activate([
-      descriptionLabel.bottomAnchor.constraint(equalTo: portableBottomAnchor, constant: 8),
+      descriptionLabel.bottomAnchor.constraint(equalTo: portableBottomAnchor, constant: -8),
       descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
       descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 8)
     ])
   }
-
-  @objc
-  private func close() {
-    
+  
+  override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    if let view = super.hitTest(point, with: event), view != self {
+      return view
+    }
+    return nil
   }
-
-  public required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+  
+  func updateOverlay(title: NSAttributedString?, current: Int, total: Int) {
+    navigationItem.title = navigationTitle(current: current, total: total)
+    descriptionLabel.attributedText = title
+  }
+  
+  private func navigationTitle(current: Int, total: Int) -> String {
+    let formattedCurrent = formatter.string(from: NSNumber(value: current))!
+    let formattedTotal = formatter.string(from: NSNumber(value: total))!
+    return String(format: NSLocalizedString("%@ of %@", comment: "{current} of {total}"), formattedCurrent, formattedTotal)
   }
 
 }

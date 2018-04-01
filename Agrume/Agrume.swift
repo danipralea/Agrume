@@ -63,7 +63,9 @@ public final class Agrume: UIViewController {
 
   private var _blurView: UIVisualEffectView?
   private var blurView: UIVisualEffectView {
-    guard case .blurred(let style) = backgroundConfig, _blurView == nil else { return _blurView! }
+    guard case .blurred(let style) = backgroundConfig, _blurView == nil else {
+      return _blurView!
+    }
 
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: style))
     blurView.frame = view.frame
@@ -72,6 +74,14 @@ public final class Agrume: UIViewController {
 
     return blurView
   }
+  
+  private lazy var overlayView: OverlayView = {
+    let overlay = OverlayView(frame: .zero)
+    overlay.frame = view.bounds
+    overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    overlay.delegate = self
+    return overlay
+  }()
 
   private var singleTapGesture: UITapGestureRecognizer = {
     return UITapGestureRecognizer(target: self, action: #selector(singleTap))
@@ -158,6 +168,14 @@ public final class Agrume: UIViewController {
     guard let image = dataSource?.image(at: startIndex) else { return }
     let controller = newImageViewController(for: image)
     pageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
+
+    if needsOverlayView() {
+      view.addSubview(overlayView)
+    }
+  }
+  
+  private func needsOverlayView() -> Bool {
+    return !images.filter { $0.title != nil }.isEmpty
   }
 
 }
@@ -257,6 +275,14 @@ extension Agrume: ImageViewControllerDelegate {
     super.dismiss(animated: true, completion: nil)
   }
 
+}
+
+extension Agrume: OverlayViewDelegate {
+
+  func didClose(overlayView view: OverlayView) {
+    dismiss()
+  }
+  
 }
 
 //  private static let transitionAnimationDuration: TimeInterval = 0.3

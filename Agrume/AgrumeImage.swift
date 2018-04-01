@@ -24,8 +24,4 @@ public struct AgrumeImage: Equatable {
     self.init(image: nil, url: url, title: title)
   }
 
-  public static func == (lhs: AgrumeImage, rhs: AgrumeImage) -> Bool {
-    return lhs.image == rhs.image && lhs.url == rhs.url && lhs.title == rhs.title
-  }
-
 }
