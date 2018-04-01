@@ -6,6 +6,8 @@ identifier_name:
     error: 60
   excluded:
     - id
+    - x
+    - y
 
 type_name:
   min_length:

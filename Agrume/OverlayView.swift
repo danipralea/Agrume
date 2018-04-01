@@ -16,6 +16,12 @@ public final class OverlayView: UIView {
   }()
 
   private var navigationItem: UINavigationItem!
+  private(set) lazy var descriptionLabel: UILabel = {
+    let label = UILabel()
+    label.usesAutolayout(true)
+    label.numberOfLines = 0
+    return label
+  }()
 
   private var leftBarButtonItem: UIBarButtonItem! {
     didSet {
@@ -25,8 +31,8 @@ public final class OverlayView: UIView {
 
   public override init(frame: CGRect) {
     super.init(frame: frame)
-
     setupNavigationBar()
+    setupDescription()
   }
 
   private func setupNavigationBar() {
@@ -38,6 +44,15 @@ public final class OverlayView: UIView {
     ])
 
     leftBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(close))
+  }
+  
+  private func setupDescription() {
+    addSubview(descriptionLabel)
+    NSLayoutConstraint.activate([
+      descriptionLabel.bottomAnchor.constraint(equalTo: portableBottomAnchor, constant: 8),
+      descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+      descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 8)
+    ])
   }
 
   @objc

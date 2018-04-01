@@ -13,6 +13,14 @@ extension UIView {
       return topAnchor
     }
   }
+  
+  var portableBottomAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor> {
+    if #available(iOS 11.0, *) {
+      return safeAreaLayoutGuide.bottomAnchor
+    } else {
+      return bottomAnchor
+    }
+  }
 
   func snapshotView() -> UIView? {
     guard let contents = layer.contents else { return snapshotView(afterScreenUpdates: true) }
@@ -43,6 +51,10 @@ extension UIView {
       centerPoint.y += (scrollView.bounds.height - scrollView.contentSize.height) / 2 + scrollView.contentOffset.y
     }
     return superView.convert(centerPoint, to: containerView)
+  }
+  
+  func usesAutolayout(_ toggle: Bool) {
+    translatesAutoresizingMaskIntoConstraints = !toggle
   }
 
 }
