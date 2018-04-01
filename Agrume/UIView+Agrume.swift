@@ -6,6 +6,14 @@ import UIKit
 
 extension UIView {
 
+  var portableTopAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor> {
+    if #available(iOS 11.0, *) {
+      return safeAreaLayoutGuide.topAnchor
+    } else {
+      return topAnchor
+    }
+  }
+
   func snapshotView() -> UIView? {
     guard let contents = layer.contents else { return snapshotView(afterScreenUpdates: true) }
 

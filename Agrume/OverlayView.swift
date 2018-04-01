@@ -32,7 +32,7 @@ public final class OverlayView: UIView {
   private func setupNavigationBar() {
     addSubview(navigationBar)
     NSLayoutConstraint.activate([
-      navigationBar.topAnchor.constraint(equalTo: topAnchor),
+      navigationBar.topAnchor.constraint(equalTo: portableTopAnchor),
       navigationBar.widthAnchor.constraint(equalTo: widthAnchor),
       navigationBar.centerXAnchor.constraint(equalTo: centerXAnchor)
     ])
