@@ -20,7 +20,7 @@ final class SingleImageBackgroundColorViewController: UIViewController {
 
   private lazy var agrume: Agrume = {
     let image = AgrumeImage(image: #imageLiteral(resourceName: "MapleBacon"), title: complicatedTitle)
-    let agrume = Agrume(image: image, background: .colored(.black))
+    let agrume = Agrume(image: image, background: .colored(.black), configuration: [.withOverlay])
     agrume.isStatusBarHidden = true
     return agrume
   }()

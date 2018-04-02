@@ -4,12 +4,24 @@
 
 import UIKit
 
-/// The background configuration
-public enum BackgroundConfig {
+/// The background type
+public enum Background {
   /// Overlay with a color
   case colored(UIColor)
   /// Overlay with a UIBlurEffectStyle
   case blurred(UIBlurEffectStyle)
+}
+
+/// The Agrume configuration
+public struct Configuration: OptionSet {
+  public let rawValue: Int
+  
+  public init(rawValue: Int) {
+    self.rawValue = rawValue
+  }
+  
+  /// Display an overlay on top of images
+  public static let withOverlay = Configuration(rawValue: 1 << 0)
 }
 
 public protocol AgrumeDataSource: class {
@@ -36,7 +48,8 @@ public final class Agrume: UIViewController {
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
 
   private let transitionAnimator = TransitionAnimator()
-  private let backgroundConfig: BackgroundConfig
+  private let background: Background
+  private let configuration: Configuration
   private let images: [AgrumeImage]
   private let startIndex: Int
 
@@ -63,7 +76,7 @@ public final class Agrume: UIViewController {
 
   private var _blurView: UIVisualEffectView?
   private var blurView: UIVisualEffectView {
-    guard case .blurred(let style) = backgroundConfig, _blurView == nil else {
+    guard case .blurred(let style) = background, _blurView == nil else {
       return _blurView!
     }
 
@@ -100,30 +113,31 @@ public final class Agrume: UIViewController {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
   }
 
-  public convenience init(image: AgrumeImage, background: BackgroundConfig = .colored(.black)) {
-    self.init(agrumeImages: [image], background: background)
+  public convenience init(image: AgrumeImage, background: Background = .colored(.black), configuration: Configuration = []) {
+    self.init(agrumeImages: [image], background: background, configuration: configuration)
   }
 
-  public convenience init(image: UIImage, background: BackgroundConfig = .colored(.black)) {
-    self.init(images: [image], urls: nil, background: background)
+  public convenience init(image: UIImage, background: Background = .colored(.black), configuration: Configuration = []) {
+    self.init(images: [image], urls: nil, background: background, configuration: configuration)
   }
 
-  public convenience init(url: URL, background: BackgroundConfig = .colored(.black)) {
-    self.init(urls: [url], background: background)
+  public convenience init(url: URL, background: Background = .colored(.black), configuration: Configuration = []) {
+    self.init(urls: [url], background: background, configuration: configuration)
   }
 
-  public convenience init(images: [UIImage], startIndex: Int = 0, background: BackgroundConfig = .colored(.black)) {
-    self.init(images: images, urls: nil, startIndex: startIndex, background: background)
+  public convenience init(images: [UIImage], startIndex: Int = 0, background: Background = .colored(.black),
+                          configuration: Configuration = []) {
+    self.init(images: images, urls: nil, startIndex: startIndex, background: background, configuration: configuration)
   }
 
-  public convenience init(urls: [URL], startIndex: Int = 0, background: BackgroundConfig = .colored(.black)) {
-    self.init(images: nil, urls: urls, startIndex: startIndex, background: background)
+  public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
+                          configuration: Configuration = []) {
+    self.init(images: nil, urls: urls, startIndex: startIndex, background: background, configuration: configuration)
   }
 
   private init(images: [UIImage]? = nil, urls: [URL]? = nil, agrumeImages: [AgrumeImage]? = nil,
-               startIndex: Int = 0, background: BackgroundConfig, dataSource: AgrumeDataSource? = nil) {
-    self.backgroundConfig = background
-
+               startIndex: Int = 0, background: Background, configuration: Configuration,
+               dataSource: AgrumeDataSource? = nil) {
     switch (images, urls, agrumeImages) {
     case (let images?, nil, nil):
       self.images = images.map { AgrumeImage(image: $0) }
@@ -135,6 +149,8 @@ public final class Agrume: UIViewController {
       fatalError("Impossible initialiser call")
     }
 
+    self.background = background
+    self.configuration = configuration
     self.startIndex = startIndex
 
     super.init(nibName: nil, bundle: nil)
@@ -153,7 +169,7 @@ public final class Agrume: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
 
-    switch backgroundConfig {
+    switch background {
     case .colored(let color):
       view.backgroundColor = color
     case .blurred:
@@ -169,13 +185,19 @@ public final class Agrume: UIViewController {
     let controller = newImageViewController(for: image)
     pageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
 
-    if needsOverlayView() {
+    if configuration.contains(.withOverlay) {
       view.addSubview(overlayView)
     }
   }
   
-  private func needsOverlayView() -> Bool {
-    return !images.filter { $0.title != nil }.isEmpty
+  public override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    updateOverlay(for: image(at: startIndex))
+  }
+  
+  private func updateOverlay(for image: AgrumeImage?) {
+    guard configuration.contains(.withOverlay), let image = image, let total = dataSource?.numberOfImages else { return }
+    overlayView.updateOverlay(title: image.title, current: index(of: image), total: total)
   }
 
 }
