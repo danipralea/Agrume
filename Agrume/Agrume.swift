@@ -69,7 +69,7 @@ public final class Agrume: UIViewController {
 
   private lazy var pageViewController: UIPageViewController = {
     let controller = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-    controller.view.addGestureRecognizer(self.singleTapGesture)
+    controller.view.addGestureRecognizer(singleTapGesture)
     controller.view.backgroundColor = .clear
     controller.delegate = self
     controller.dataSource = self
@@ -98,18 +98,13 @@ public final class Agrume: UIViewController {
     return overlay
   }()
 
-  private var singleTapGesture: UITapGestureRecognizer = {
+  private lazy var singleTapGesture: UITapGestureRecognizer = {
     return UITapGestureRecognizer(target: self, action: #selector(singleTap))
   }()
 
   /// An optional download handler. Passed the URL that is supposed to be loaded. Call the completion with the image
   /// when the download is done.
   public var download: ((_ url: URL, _ completion: @escaping DownloadCompletion) -> Void)?
-
-  @objc
-  private func singleTap(_ gesture: UITapGestureRecognizer) {
-    print("single tap")
-  }
 
   public override var prefersStatusBarHidden: Bool {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
@@ -197,6 +192,9 @@ public final class Agrume: UIViewController {
 
     if configuration.contains(.withOverlay) {
       view.addSubview(overlayView)
+      delay(.seconds(2)) { [weak self] in
+        self?.overlayView.setHidden(true)
+      }
     }
   }
   
@@ -208,6 +206,12 @@ public final class Agrume: UIViewController {
   private func updateOverlay(for image: AgrumeImage?) {
     guard configuration.contains(.withOverlay), let image = image, let total = dataSource?.numberOfImages else { return }
     overlayView.updateOverlay(title: image.title, current: index(of: image) + 1, total: total)
+  }
+
+  @objc
+  private func singleTap() {
+    guard configuration.contains(.withOverlay) else { return }
+    overlayView.setHidden(!overlayView.isHidden)
   }
 
 }

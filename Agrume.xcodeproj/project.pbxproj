@@ -20,6 +20,7 @@
 		F2D9598C1B1A108800073772 /* AgrumeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D9598B1B1A108800073772 /* AgrumeCell.swift */; };
 		F2DC79D41B17012300818A8C /* UIView+Agrume.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DC79D31B17012300818A8C /* UIView+Agrume.swift */; };
 		F2DC79D61B170C4B00818A8C /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DC79D51B170C4B00818A8C /* ImageDownloader.swift */; };
+		F2F8234C20727DC900D78875 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8234B20727DC900D78875 /* Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		F2D9598B1B1A108800073772 /* AgrumeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgrumeCell.swift; sourceTree = "<group>"; };
 		F2DC79D31B17012300818A8C /* UIView+Agrume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Agrume.swift"; sourceTree = "<group>"; };
 		F2DC79D51B170C4B00818A8C /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		F2F8234B20727DC900D78875 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,13 +100,14 @@
 				F2D9598B1B1A108800073772 /* AgrumeCell.swift */,
 				77D2BFAF2042EEA300E3509B /* AgrumeImage.swift */,
 				94318E531D32612D0096215A /* AgrumeServiceLocator.swift */,
+				F2F8234B20727DC900D78875 /* Helpers.swift */,
 				F2DC79D51B170C4B00818A8C /* ImageDownloader.swift */,
 				77D2BFB12042F49B00E3509B /* ImageViewController.swift */,
+				7767612A2061A4A1004F53C5 /* OverlayView.swift */,
 				77D2BFB32042F5FE00E3509B /* ScrollView.swift */,
 				F2A51FF11B10E00700924912 /* Supporting Files */,
 				77946FD42049712E0053CDA0 /* TransitionAnimator.swift */,
 				F2DC79D31B17012300818A8C /* UIView+Agrume.swift */,
-				7767612A2061A4A1004F53C5 /* OverlayView.swift */,
 			);
 			path = Agrume;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				F2D9598C1B1A108800073772 /* AgrumeCell.swift in Sources */,
 				77946FD52049712E0053CDA0 /* TransitionAnimator.swift in Sources */,
 				F2DC79D41B17012300818A8C /* UIView+Agrume.swift in Sources */,
+				F2F8234C20727DC900D78875 /* Helpers.swift in Sources */,
 				77D2BFB22042F49B00E3509B /* ImageViewController.swift in Sources */,
 				F2DC79D61B170C4B00818A8C /* ImageDownloader.swift in Sources */,
 				77D2BFB42042F5FE00E3509B /* ScrollView.swift in Sources */,

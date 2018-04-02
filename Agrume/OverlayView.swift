@@ -99,5 +99,19 @@ final class OverlayView: UIView {
     let formattedTotal = formatter.string(from: NSNumber(value: total))!
     return String(format: NSLocalizedString("%@ of %@", comment: "{current} of {total}"), formattedCurrent, formattedTotal)
   }
+  
+  func setHidden(_ hidden: Bool) {
+    guard isHidden != hidden else { return }
+    
+    isHidden = false
+    alpha = hidden ? 1 : 0
+    
+    UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction], animations: {
+      self.alpha = hidden ? 0 : 1
+    }, completion: { _ in
+      self.alpha = 1
+      self.isHidden = hidden
+    })
+  }
 
 }
