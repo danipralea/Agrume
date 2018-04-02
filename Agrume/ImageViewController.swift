@@ -15,6 +15,7 @@ final class ImageViewController: UIViewController {
   private static let minFlickDismissVelocity: CGFloat = 800
 
   let agrumeImage: AgrumeImage
+  private let withPhysics: Bool
 
   weak var delegate: ImageViewControllerDelegate?
 
@@ -34,7 +35,7 @@ final class ImageViewController: UIViewController {
   }()
 
   private lazy var animator: UIDynamicAnimator = {
-    let animator = UIDynamicAnimator(referenceView: self.scrollView)
+    let animator = UIDynamicAnimator(referenceView: scrollView)
     return animator
   }()
 
@@ -48,13 +49,13 @@ final class ImageViewController: UIViewController {
   }()
 
   private(set) lazy var doubleTapGesture: UITapGestureRecognizer = {
-    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.doubleTap))
+    let gesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
     gesture.numberOfTapsRequired = 2
     return gesture
   }()
 
   private lazy var panGesture: UIPanGestureRecognizer = {
-    let gesture = UIPanGestureRecognizer(target: self, action: #selector(self.pan))
+    let gesture = UIPanGestureRecognizer(target: self, action: #selector(pan))
     gesture.maximumNumberOfTouches = 1
     gesture.delegate = self
     return gesture
@@ -64,8 +65,9 @@ final class ImageViewController: UIViewController {
     downloadTask?.cancel()
   }
 
-  init(image: AgrumeImage) {
+  init(image: AgrumeImage, withPhysics: Bool) {
     self.agrumeImage = image
+    self.withPhysics = withPhysics
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -79,7 +81,9 @@ final class ImageViewController: UIViewController {
     view.addSubview(scrollView)
     view.addSubview(activityIndicator)
     view.addGestureRecognizer(doubleTapGesture)
-    scrollView.addGestureRecognizer(panGesture)
+    if withPhysics {
+      scrollView.addGestureRecognizer(panGesture)
+    }
 
     if let image = agrumeImage.image {
       scrollView.image = image

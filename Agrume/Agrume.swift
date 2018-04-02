@@ -22,6 +22,8 @@ public struct Configuration: OptionSet {
   
   /// Display an overlay on top of images
   public static let withOverlay = Configuration(rawValue: 1 << 0)
+  /// Physics to drag and dismiss images
+  public static let withPhysics = Configuration(rawValue: 1 << 1)
 }
 
 public protocol AgrumeDataSource: class {
@@ -113,25 +115,28 @@ public final class Agrume: UIViewController {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
   }
 
-  public convenience init(image: AgrumeImage, background: Background = .colored(.black), configuration: Configuration = []) {
+  public convenience init(image: AgrumeImage, background: Background = .colored(.black),
+                          configuration: Configuration = [.withPhysics]) {
     self.init(agrumeImages: [image], background: background, configuration: configuration)
   }
 
-  public convenience init(image: UIImage, background: Background = .colored(.black), configuration: Configuration = []) {
+  public convenience init(image: UIImage, background: Background = .colored(.black),
+                          configuration: Configuration = [.withPhysics]) {
     self.init(images: [image], urls: nil, background: background, configuration: configuration)
   }
 
-  public convenience init(url: URL, background: Background = .colored(.black), configuration: Configuration = []) {
+  public convenience init(url: URL, background: Background = .colored(.black),
+                          configuration: Configuration = [.withPhysics]) {
     self.init(urls: [url], background: background, configuration: configuration)
   }
 
   public convenience init(images: [UIImage], startIndex: Int = 0, background: Background = .colored(.black),
-                          configuration: Configuration = []) {
+                          configuration: Configuration = [.withPhysics]) {
     self.init(images: images, urls: nil, startIndex: startIndex, background: background, configuration: configuration)
   }
 
   public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
-                          configuration: Configuration = []) {
+                          configuration: Configuration = [.withPhysics]) {
     self.init(images: nil, urls: urls, startIndex: startIndex, background: background, configuration: configuration)
   }
 
@@ -197,7 +202,7 @@ public final class Agrume: UIViewController {
   
   private func updateOverlay(for image: AgrumeImage?) {
     guard configuration.contains(.withOverlay), let image = image, let total = dataSource?.numberOfImages else { return }
-    overlayView.updateOverlay(title: image.title, current: index(of: image), total: total)
+    overlayView.updateOverlay(title: image.title, current: index(of: image) + 1, total: total)
   }
 
 }
@@ -231,7 +236,7 @@ extension Agrume: UIPageViewControllerDataSource {
   }
 
   private func newImageViewController(for image: AgrumeImage) -> ImageViewController {
-    let controller = ImageViewController(image: image)
+    let controller = ImageViewController(image: image, withPhysics: configuration.contains(.withPhysics))
     controller.delegate = self
     singleTapGesture.require(toFail: controller.doubleTapGesture)
     return controller

@@ -17,6 +17,7 @@ final class OverlayView: UIView {
     navigationbar.shadowImage = UIImage()
     navigationbar.setBackgroundImage(UIImage(), for: .default)
     navigationbar.items = [navigationItem]
+    navigationbar.titleTextAttributes = [.foregroundColor: UIColor.white]
     return navigationbar
   }()
   
