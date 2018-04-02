@@ -134,6 +134,11 @@ public final class Agrume: UIViewController {
                           configuration: Configuration = [.withPhysics]) {
     self.init(images: images, urls: nil, startIndex: startIndex, background: background, configuration: configuration)
   }
+  
+  public convenience init(images: [AgrumeImage], startIndex: Int = 0, background: Background = .colored(.black),
+                          configuration: Configuration = [.withPhysics]) {
+    self.init(agrumeImages: images, startIndex: startIndex, background: background, configuration: configuration)
+  }
 
   public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
@@ -256,8 +261,8 @@ extension Agrume: UIPageViewControllerDelegate {
 
   public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool,
                                  previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-    guard completed else { return }
-
+    guard completed, let currentImageViewController = currentImageViewController else { return }
+    updateOverlay(for: currentImageViewController.agrumeImage)
   }
 
   private var currentImageViewController: ImageViewController? {

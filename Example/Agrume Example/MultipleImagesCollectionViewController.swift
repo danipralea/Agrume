@@ -8,17 +8,20 @@ import Agrume
 final class MultipleImagesCollectionViewController: UICollectionViewController {
 
   private let identifier = "Cell"
+  
+  private let attributes: [NSAttributedStringKey: Any] = [.foregroundColor: UIColor.white,
+                                                          .font: UIFont.systemFont(ofSize: 14)]
 
-  private let images = [
-    #imageLiteral(resourceName: "MapleBacon"),
-    #imageLiteral(resourceName: "EvilBacon")
-  ]
+  private var images: [AgrumeImage] = []
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
     let layout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
     layout.itemSize = CGSize(width: view.bounds.width, height: view.bounds.height)
+    
+    images.append(AgrumeImage(image: #imageLiteral(resourceName: "MapleBacon"), title: NSAttributedString(string: "A lemony fresh image view", attributes: attributes)))
+    images.append(AgrumeImage(image: #imageLiteral(resourceName: "EvilBacon"), title: NSAttributedString(string: "Written in Swift", attributes: attributes)))
   }
 
   // MARK: UICollectionViewDataSource
@@ -29,14 +32,14 @@ final class MultipleImagesCollectionViewController: UICollectionViewController {
 
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! DemoCell
-    cell.imageView.image = images[indexPath.row]
+    cell.imageView.image = images[indexPath.row].image
     return cell
   }
 
   // MARK: UICollectionViewDelegate
 
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let agrume = Agrume(images: images, startIndex: indexPath.item)
+    let agrume = Agrume(images: images, startIndex: indexPath.item, configuration: [.withOverlay])
 //    agrume.didScroll = { [unowned self] index in
 //      self.collectionView?.scrollToItem(at: IndexPath(item: index, section: 0), at: [], animated: false)
 //    }
