@@ -23,23 +23,15 @@ extension UIView {
   }
 
   func snapshotView() -> UIView? {
-    guard let contents = layer.contents else { return snapshotView(afterScreenUpdates: true) }
-
-    let snapshot: UIView
-    if let view = self as? UIImageView {
-      snapshot = UIImageView(image: view.image)
-      snapshot.bounds = view.bounds
-    } else {
-      snapshot = UIView(frame: frame)
-      snapshot.layer.contents = contents
-      snapshot.layer.bounds = layer.bounds
+    UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
+    defer {
+      UIGraphicsEndImageContext()
     }
-
-    snapshot.layer.masksToBounds = layer.masksToBounds
-    snapshot.contentMode = contentMode
-    snapshot.transform = transform
-
-    return snapshot
+    guard let context = UIGraphicsGetCurrentContext() else {
+      return nil
+    }
+    layer.render(in: context)
+    return UIImageView(image: UIGraphicsGetImageFromCurrentImageContext())
   }
 
   func translatedCenter(toContainerView containerView: UIView) -> CGPoint {
