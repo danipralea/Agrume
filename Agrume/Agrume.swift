@@ -104,7 +104,7 @@ public final class Agrume: UIViewController {
 
   /// An optional download handler. Passed the URL that is supposed to be loaded. Call the completion with the image
   /// when the download is done.
-  public var download: ((_ url: URL, _ completion: @escaping DownloadCompletion) -> Void)?
+  public var downloadHandler: ((_ url: URL, _ completion: @escaping DownloadCompletion) -> Void)?
 
   public override var prefersStatusBarHidden: Bool {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
@@ -309,6 +309,14 @@ extension Agrume: ImageViewControllerDelegate {
 //    transitionAnimator.finalView = nil
 
     super.dismiss(animated: true, completion: nil)
+  }
+  
+  func download(url: URL, completion: @escaping (_ image: UIImage?) -> Void) -> URLSessionDataTask? {
+    if let downloadHandler = downloadHandler {
+      downloadHandler(url, completion)
+      return nil
+    }
+    return ImageDownloader.downloadImage(url, completion: completion)
   }
 
 }

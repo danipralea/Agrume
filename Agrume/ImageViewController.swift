@@ -7,6 +7,7 @@ import UIKit
 protocol ImageViewControllerDelegate: class {
 
   func dismiss()
+  func download(url: URL, completion: @escaping (_ image: UIImage?) -> Void) -> URLSessionDataTask?
 
 }
 
@@ -95,7 +96,7 @@ final class ImageViewController: UIViewController {
     super.viewWillAppear(animated)
     if let url = agrumeImage.url, scrollView.image == nil {
       activityIndicator.startAnimating()
-      downloadTask = ImageDownloader.downloadImage(url) { [weak self] image in
+      downloadTask = delegate?.download(url: url) { [weak self] image in
         self?.scrollView.image = image
         self?.activityIndicator.stopAnimating()
       }
