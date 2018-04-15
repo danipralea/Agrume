@@ -32,7 +32,9 @@ trailing_whitespace:
 
 cyclomatic_complexity:
   warning: 15
-
+  
+force_try:
+  severity: warning
 
 opt_in_rules:
   - attributes
