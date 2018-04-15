@@ -1,6 +1,6 @@
 identifier_name:
   min_length:
-    error: 3
+    error: 2
   max_length:
     warning: 50
     error: 60
@@ -8,14 +8,16 @@ identifier_name:
     - id
     - x
     - y
+    - i
 
 type_name:
   min_length:
-    error: 3
+    error: 2
   max_length:
     error: 50
   excluded:
     - id
+    - to
     
 type_body_length:
   - 600
