@@ -315,6 +315,9 @@ extension Agrume: ImageViewControllerDelegate {
     if let downloadHandler = downloadHandler {
       downloadHandler(url, completion)
       return nil
+    } else if let downloadHandler = AgrumeServiceLocator.shared.downloadHandler {
+      downloadHandler(url, completion)
+      return nil
     }
     return ImageDownloader.downloadImage(url, completion: completion)
   }
