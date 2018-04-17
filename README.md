@@ -9,10 +9,9 @@ An iOS image viewer written in Swift with support for multiple images.
 
 ![Agrume](https://www.dropbox.com/s/bdt6sphcyloa38u/Agrume.gif?raw=1)
 
-
 ## Requirements
 
-- Swift 4 (for Swift 3 support, use version 3.x)
+- Swift 4.1 (for Swift 3 support, use version 3.x)
 - iOS 8.0+
 - Xcode 9+
 
@@ -32,7 +31,7 @@ github "JanGorman/Agrume"
 
 ## How
 
-There are multiple ways you can use the image viewer (and the included Example project shows them all).
+There are multiple ways you can use the image viewer (and the included sample project shows them all).
 
 For just a single image it's as easy as
 
@@ -42,26 +41,35 @@ For just a single image it's as easy as
 import Agrume
 
 @IBAction func openImage(_ sender: Any) {
-  if let image = UIImage(named: "…") {
-	let agrume = Agrume(image: image)
-	agrume.showFrom(self)	
-  }
+  guard let image = UIImage(named: "…") else { return }
+
+  let agrume = Agrume(image: image)
+  // Present Agrume like any regular UIViewController
+  present(agrume, animated: true)
 }
 ```
 
 You can also pass in a `URL` and Agrume will take care of the download for you.
 
-### Background Color
+### Background Configuration
 
-Agrume defaults to blurring the background view controller but you can also pass in a background color instead and it will use that:
+Agrume has different background configurations. You can have it blur the view it's covering or supply a background color:
 
 ```swift
-@IBAction func openImage(_ sender: Any) {
-	let image = UIImage(named: "…")!
-	let agrume = Agrume(image: Image, backgroundColor: .black)
-	agrume.hideStatusBar = true
-	agrume.showFrom(self)
-}
+let agrume = Agrume(image: UIImage(named: "…")!, background: .blurred(.regular))
+// or
+let agrume = Agrume(image: UIImage(named: "…")!, background: .colored(.green))
+```
+
+### Image With Description
+
+There's support to show a description beneath each image. By passing a wrapper type `AgrumeImage` instead of just a regular `UIImage` or `URL` you can supply an `NSAttributedString`:
+
+```swift
+let title = NSAttributedString(string: "…")
+let image = AgrumeImage(image: UIImage(named: "…")!, title: title)
+let agrume = Agrume(image: image, background: .colored(.black), configuration: [.withOverlay])
+present(agrume, animated: true)
 ```
 
 ### Multiple Images
@@ -69,16 +77,15 @@ Agrume defaults to blurring the background view controller but you can also pass
 If you're displaying a `UICollectionView` and want to add support for zooming, you can also call Agrume with an array of either images or URLs.
 
 ```swift
-let agrume = Agrume(images: images, startIndex: indexPath.row, backgroundBlurStyle: .light)
+let agrume = Agrume(images: images, startIndex: indexPath.row, background: .blurred(.regular))
+// Keep image in sync with what's going on in Agrume
 agrume.didScroll = { [unowned self] index in
   self.collectionView?.scrollToItem(at: IndexPath(row: index, section: 0),
                                     at: [],
                                     animated: false)
 }
-agrume.showFrom(self)
+present(agrume, animated: true)
 ```
-
-This shows a way of keeping the zoomed library and the one in the background synced.
 
 ### Custom Download Handler
 
@@ -89,13 +96,13 @@ import Agrume
 import MapleBacon
 
 @IBAction func openURL(_ sender: Any) {
-  let agrume = Agrume(imageUrl: URL(string: "https://dl.dropboxusercontent.com/u/512759/MapleBacon.png")!, backgroundBlurStyle: .light)
+  let agrume = Agrume(imageUrl: URL(string: "https://dl.dropboxusercontent.com/u/512759/MapleBacon.png")!)
   agrume.download = { url, completion in
     Downloader.default.download(url) { image in
       completion(image)
     }
   }
-  agrume.showFrom(self)
+  present(agrume, animated: true)
 }
 ```
 
@@ -111,7 +118,7 @@ AgrumeServiceLocator.shared.setDownloadHandler { url, completion in
 }
 
 // Some other place
-agrume.showFrom(self)
+present(agrume, animated: true)
 
 ```
 
@@ -129,16 +136,6 @@ agrume.showFrom(self)
 
 ```
 
-### Custom Background Snapshot
-
-When showing the Agrume view controller, it'll default to taking a snapshot of the root view and blurring that. You can customize this behaviour by passing in a different view that it will blur and display:
-
-```swift
-let agrume = Agrume(image: image)
-agrume.showFrom(self, backgroundSnapshotVC: self)
-
-```
-
 ### Status Bar Appearance
 
 You can customize the status bar appearance when displaying the zoomed in view. `Agrume` has a `statusBarStyle` property:
@@ -146,7 +143,7 @@ You can customize the status bar appearance when displaying the zoomed in view. 
 ```swift
 let agrume = Agrume(image: image)
 agrume.statusBarStyle = .lightContent
-agrume.showFrom(self)
+present(agrume, animated: true)
 ```
 
 ## Licence
