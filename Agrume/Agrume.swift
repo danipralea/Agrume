@@ -110,31 +110,64 @@ public final class Agrume: UIViewController {
     return presentingViewController?.prefersStatusBarHidden ?? isStatusBarHidden
   }
 
+  /// Initialize Agrume with a single AgrumeImage
+  ///
+  /// - Parameter image: The AgrumeImage instance
+  /// - Parameter background: The background type. Defaults to a black background
+  /// - Parameter configuration: The configuration. Defaults to physics, i.e. drag the image to dismiss it
   public convenience init(image: AgrumeImage, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
     self.init(agrumeImages: [image], background: background, configuration: configuration)
   }
 
+  /// Initialize Agrume with a single UIImage
+  ///
+  /// - Parameter image: The UIImage
+  /// - Parameter background: The background type. Defaults to a black background
+  /// - Parameter configuration: The configuration. Defaults to physics, i.e. drag the image to dismiss it
   public convenience init(image: UIImage, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
     self.init(images: [image], urls: nil, background: background, configuration: configuration)
   }
 
+  /// Initialize Agrume with a single URL
+  ///
+  /// - Parameter image: The URL to load
+  /// - Parameter background: The background type. Defaults to a black background
+  /// - Parameter configuration: The configuration. Defaults to physics, i.e. drag the image to dismiss it
   public convenience init(url: URL, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
     self.init(urls: [url], background: background, configuration: configuration)
   }
 
+  /// Initialize Agrume with a multiple UIImages
+  ///
+  /// - Parameter images: The array of UIImages
+  /// - Parameter startIndex: The index of the first image to show. Defaults to 0
+  /// - Parameter background: The background type. Defaults to a black background
+  /// - Parameter configuration: The configuration. Defaults to physics, i.e. drag the image to dismiss it
   public convenience init(images: [UIImage], startIndex: Int = 0, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
     self.init(images: images, urls: nil, startIndex: startIndex, background: background, configuration: configuration)
   }
   
+  /// Initialize Agrume with a multiple AgrumeImages
+  ///
+  /// - Parameter images: The array of AgrumeImages
+  /// - Parameter startIndex: The index of the first image to show. Defaults to 0
+  /// - Parameter background: The background type. Defaults to a black background
+  /// - Parameter configuration: The configuration. Defaults to physics, i.e. drag the image to dismiss it
   public convenience init(images: [AgrumeImage], startIndex: Int = 0, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
     self.init(agrumeImages: images, startIndex: startIndex, background: background, configuration: configuration)
   }
 
+  /// Initialize Agrume with a multiple URLs
+  ///
+  /// - Parameter images: The array of URLs
+  /// - Parameter startIndex: The index of the first image to show. Defaults to 0
+  /// - Parameter background: The background type. Defaults to a black background
+  /// - Parameter configuration: The configuration. Defaults to physics, i.e. drag the image to dismiss it
   public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
                           configuration: Configuration = [.withPhysics]) {
     self.init(images: nil, urls: urls, startIndex: startIndex, background: background, configuration: configuration)
