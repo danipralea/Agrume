@@ -137,9 +137,9 @@ final class ImageViewController: UIViewController {
 
   @objc
   private func pan(_ gesture: UIPanGestureRecognizer) {
-    let translation = gesture.translation(in: scrollView.imageView)
-    let location = gesture.location(in: scrollView.imageView)
-    let velocity = gesture.velocity(in: scrollView.imageView)
+    let translation = gesture.translation(in: gesture.view!)
+    let location = gesture.location(in: gesture.view!)
+    let velocity = gesture.velocity(in: gesture.view!)
     let vectorDistance = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
 
     switch gesture.state {

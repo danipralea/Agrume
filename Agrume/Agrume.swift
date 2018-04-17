@@ -339,7 +339,6 @@ extension Agrume: ImageViewControllerDelegate {
       startView = currentImageViewController?.scrollView.imageView
     }
     transitionAnimator.startView = startView
-//    transitionAnimator.finalView = nil
 
     super.dismiss(animated: true, completion: nil)
   }
